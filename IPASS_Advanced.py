@@ -87,7 +87,7 @@ def setup(infiles):
     del srows
 
 def address_check(infiles):
-    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\ipass_check1.txt', 'rb')
+    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\ipass_check1.txt', 'rb') # Download the accompanying text files and set appropriate paths
     read1 = pass1.readline()
     splitter1 = read1.split(",")
     check = []
@@ -175,7 +175,7 @@ def address_check(infiles):
     del srows
 
 def address_check2(infiles):
-    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\ipass_check2.txt', 'rb')
+    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\ipass_check2.txt', 'rb') # Download the accompanying text files and set appropriate paths
     read1 = pass1.readline()
     splitter1 = read1.split(",")
     check = []
@@ -263,7 +263,7 @@ def address_check2(infiles):
     del srows
 
 def address_check3(infiles):
-    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\ipass_check3.txt', 'rb')
+    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\ipass_check3.txt', 'rb') # Download the accompanying text files and set appropriate paths
     read1 = pass1.readline()
     splitter1 = read1.split(",")
     check = []
@@ -424,7 +424,7 @@ def combo(infiles):
     del srows
 
 def zip_to_street(infiles):
-    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\zip_dict.txt', 'rb')
+    pass1 = open(r'C:\Documents and Settings\aaburges\Desktop\ipass_docs\zip_dict.txt', 'rb') # Download the accompanying text files and set appropriate paths
     read1 = pass1.readline()
     splitter1 = read1.split(",")
     check = []
@@ -502,7 +502,7 @@ def zip_to_street(infiles):
     del srows
     
 def add_select(infiles):
-    f = open('C:\\Documents and Settings\\aaburges\\Desktop\\ipass_docs\\missing_log.txt', 'wb')
+    f = open('C:\\Documents and Settings\\aaburges\\Desktop\\ipass_docs\\missing_log.txt', 'wb') # Set appropriate path
     srows = arcpy.UpdateCursor(infiles)
     for srow in srows:
         streeter2 = srow.getValue("street_cl")
@@ -530,7 +530,7 @@ def add_select(infiles):
     f.close()
 
 def finale(infiles):
-    f = open('C:\\Documents and Settings\\aaburges\\Desktop\\ipass_docs\\unique.txt', 'rb')
+    f = open('C:\\Documents and Settings\\aaburges\\Desktop\\ipass_docs\\unique.txt', 'rb') # Download the accompanying text files and set appropriate paths
     read2 = f.readline()
     diction = {}
     splitter = read2.split(",")
