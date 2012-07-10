@@ -93,7 +93,7 @@ def address_check(infiles):
     check = []
     for item in splitter1:
         matcher = ''.join(item)
-        ender = check.append(matcher)
+        check.append(matcher)
     pass1.close()
     srows = arcpy.UpdateCursor(infiles)
     for srow in srows:
@@ -181,7 +181,7 @@ def address_check2(infiles):
     check = []
     for item in splitter1:
         matcher = ''.join(item)
-        ender = check.append(matcher)
+        check.append(matcher)
     pass1.close()
     srows = arcpy.UpdateCursor(infiles)
     for srow in srows:
@@ -269,7 +269,7 @@ def address_check3(infiles):
     check = []
     for item in splitter1:
         matcher = ''.join(item)
-        ender = check.append(matcher)
+        check.append(matcher)
     pass1.close()
     srows = arcpy.UpdateCursor(infiles)
     for srow in srows:
@@ -430,7 +430,7 @@ def zip_to_street(infiles):
     check = []
     for item in splitter1:
         matcher = ''.join(item)
-        ender = check.append(matcher)
+        check.append(matcher)
     pass1.close()
     srows = arcpy.UpdateCursor(infiles)
     for srow in srows:
