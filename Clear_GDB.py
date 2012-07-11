@@ -11,7 +11,7 @@
 import arcpy, sys, traceback
 
 try:
-    arcpy.env.workspace = r"C:\Users\Aaron\Documents\ArcGIS\Default.gdb"
+    arcpy.env.workspace = r"C:\Users\Aaron\Documents\ArcGIS\Default.gdb" # set to your default GDB path
     arcpy.AddMessage("Your default geodatabase will soon be sparkling clean")
     # Remove all feature classes
     for items in arcpy.ListFeatureClasses():
