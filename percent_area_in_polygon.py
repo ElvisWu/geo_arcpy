@@ -1,34 +1,23 @@
 # Calculate percent of area of polygons inside a polygon
 
+from __future__ import division
 import arcpy, os, sys, traceback, shutil, tempfile
+
 
 # user inputs
 inFeature = arcpy.GetParameterAsText(0)
 areaFeatures = arcpy.GetParameterAsText(1)
-fieldNames = arcpy.GetParameterAsText(2)
-
-field_split = fieldNames.split(",")
-fielders = []
-for field in field_split:
-    fielders.append(field)
-tempDir = tempfile.mkdtemp()
-tempName = "temp.shp"
-tempFile = tempDir+"temp.shp"
-tempFile2 = tempDir+"temp_int.shp"
+fieldNames = arcpy.GetParameter(2)
 
 # functions
-class PercentArea(object):
-     
-    def __init__(self, infile, *args):
-        self.fields = []
+class Within_Area_Calc(object):
+    
+    def __init__(self, infile, fields):
         self.infile = infile
-        self.inFeatures = [self.infile]
-        for arg in args:
-            self.fields.append(arg)
-        for field in self.fields:
-            arcpy.AddField_management(infile, field, "DOUBLE")
-        arcpy.AddField_management(infile, "unique", "LONG")
-        srows = arcpy.UpdateCursor(infile)
+        self.fields = fields
+        arcpy.AddField_management(self.infile, self.fields, "DOUBLE")
+        arcpy.AddField_management(self.infile, "unique", "LONG")
+        srows = arcpy.UpdateCursor(self.infile)
         count = 0
         for srow in srows:
             srow.unique = count
@@ -36,35 +25,40 @@ class PercentArea(object):
             count += 1
         del srow
         del srows
-            
-    def sect_and_dissolve(self, *args):
-        for arg in args:
-            if arcpy.Exists(tempFile, tempFile2, "temp_lyr"):
-                arcpy.Delete_management(tempFile, tempFile2, "temp_lyr")
-            self.inFeatures.append(arg)
-            arcpy.Intersect_analysis(self.inFeatures, tempFile)
-            self.inFeatures.remove(arg)
-            arcpy.Dissolve_management(tempFile, tempFile2, "unique", "Shape_Area SUM", "MULTI_PART", "DISSOLVE_LINES")
-            arcpy.MakeFeatureLayer_management(tempFile2, "temp_lyr")
+                
+    def sect_and_dissolve(self, sub_features):
+        feat_list = [self.infile, sub_features]
+        temp_list = ["temp", "temp_int"]
+        try:
+            for item in temp_list:
+                if arcpy.Exists(item):
+                    arcpy.Delete_management(item)
+            arcpy.Intersect_analysis(feat_list, "temp")
+            arcpy.Dissolve_management("temp", "temp_int", "unique", "Shape_Area SUM", "MULTI_PART", "DISSOLVE_LINES")
+            arcpy.MakeFeatureLayer_management("temp_int", "temp_lyr")
             arcpy.JoinField_management(self.infile, "unique", "temp_lyr", "unique", "SUM_Shape_Area;unique")
             srows = arcpy.UpdateCursor(self.infile)
-            count2 = 0
             for srow in srows:
-                sum_area = srow.getValue("SUM_Shape_Area")
-                area = srow.getValue("Shape_Area")
-                result = float(sum_area)/float(area)
-                fieldName = self.fields[count2]
-                srow.fieldName = result
-                srows.updateRow(srow)
-                count2 += 1
-        del srow
-        del srows
-        arcpy.DeleteField_management(self.infile, "unique", "SUM_Shape_Area")
-        
+                try:
+                    sum_area = srow.getValue("SUM_Shape_Area")
+                    area = srow.getValue("Shape_Area")
+                    result = sum_area/area
+                    srow.setValue(self.fields, result)
+                    srows.updateRow(srow)
+                except(TypeError, NameError, ValueError, IOError):
+                    pass
+            del srow
+            del srows
+            fielddrop = ["unique","unique_1", "SUM_Shape_Area"]
+            arcpy.DeleteField_management(self.infile, fielddrop)
+        except(SyntaxError, NameError, ValueError, IOError):
+            pass
+    
 # main
 try:
-    cookie_cutter = PercentArea(inFeature, fielders)
-    cookie_cutter.sect_and_dissolve(areaFeatures)
+    if __name__ == '__main__':
+        Area_Calc = Within_Area_Calc(inFeature, fieldNames)
+        Area_Calc.sect_and_dissolve(areaFeatures)
     
 except:
     # begin error handling
@@ -84,6 +78,3 @@ except:
     arcpy.AddMessage(arcpy.GetMessages(1))
 
     print arcpy.GetMessage(1)
-
-finally:
-    shutil.rmtree(tempDir)
